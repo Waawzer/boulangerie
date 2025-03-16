@@ -4,15 +4,11 @@ import { useEffect, useRef, useState } from 'react';
 import Image from 'next/image';
 
 export default function BakeryBackground() {
-  const [scrollPosition, setScrollPosition] = useState(0);
   const [scrollProgress, setScrollProgress] = useState(0);
   const containerRef = useRef<HTMLDivElement>(null);
   
   useEffect(() => {
     const handleScroll = () => {
-      const position = window.scrollY;
-      setScrollPosition(position);
-      
       // Calculate scroll progress for effects
       // We want to start the effect when the user enters this section
       if (containerRef.current) {

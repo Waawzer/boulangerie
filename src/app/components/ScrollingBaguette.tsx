@@ -5,17 +5,9 @@ import Image from 'next/image';
 
 export default function ScrollingBaguette() {
   const [scrollProgress, setScrollProgress] = useState(0);
-  const [windowHeight, setWindowHeight] = useState(0);
   const baguetteRef = useRef<HTMLDivElement>(null);
   
   useEffect(() => {
-    // Set window height
-    setWindowHeight(window.innerHeight);
-    
-    const handleResize = () => {
-      setWindowHeight(window.innerHeight);
-    };
-    
     const handleScroll = () => {
       if (!baguetteRef.current) return;
       
@@ -23,15 +15,15 @@ export default function ScrollingBaguette() {
       const docHeight = document.body.offsetHeight;
       const winHeight = window.innerHeight;
       const scrollPercent = scrollTop / (docHeight - winHeight);
-      setScrollProgress(Math.min(scrollPercent * 1, 1)); // Multiply by 1.5 to make the effect happen faster
+      setScrollProgress(Math.min(scrollPercent * 1.5, 1)); // Multiply by 1.5 to make the effect happen faster
     };
     
     window.addEventListener('scroll', handleScroll);
-    window.addEventListener('resize', handleResize);
+    window.addEventListener('resize', handleScroll);
     
     return () => {
       window.removeEventListener('scroll', handleScroll);
-      window.removeEventListener('resize', handleResize);
+      window.removeEventListener('resize', handleScroll);
     };
   }, []);
   
@@ -157,7 +149,7 @@ export default function ScrollingBaguette() {
                 transform: `translateY(-30px)`,
               }}
             >
-              L'Artisan
+              L&apos;Artisan
             </h2>
           </div>
           
@@ -198,7 +190,7 @@ export default function ScrollingBaguette() {
           <div className="absolute bottom-[30%] left-[10%] max-w-md text-left">
             <h2 className="text-[var(--accent)] mb-4">Tradition & Innovation</h2>
             <p className="text-white/90">
-              Notre boulangerie marie l'excellence artisanale à une vision résolument moderne.
+              Notre boulangerie marie l&apos;excellence artisanale à une vision résolument moderne.
               Chaque baguette est façonnée à la main selon des méthodes ancestrales.
             </p>
           </div>
@@ -254,9 +246,9 @@ export default function ScrollingBaguette() {
                   opacity: engagementOpacity,
                 }}
               >
-                Chez L'Artisan Moderne, nous croyons que le pain est bien plus qu'un simple aliment.
-                C'est une expérience sensorielle, un art millénaire que nous réinventons chaque jour
-                avec passion et créativité. Notre engagement pour l'excellence se traduit dans chaque
+                Chez L&apos;Artisan Moderne, nous croyons que le pain est bien plus qu&apos;un simple aliment.
+                C&apos;est une expérience sensorielle, un art millénaire que nous réinventons chaque jour
+                avec passion et créativité. Notre engagement pour l&apos;excellence se traduit dans chaque
                 création qui sort de nos fours.
               </p>
               
@@ -280,7 +272,7 @@ export default function ScrollingBaguette() {
                   },
                   {
                     title: 'Savoir-faire',
-                    description: 'Un artisanat d\'exception perpétué et réinventé par nos maîtres boulangers.'
+                    description: 'Un artisanat d&apos;exception perpétué et réinventé par nos maîtres boulangers.'
                   }
                 ].map((item, index) => (
                   <div 

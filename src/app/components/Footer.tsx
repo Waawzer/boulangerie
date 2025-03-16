@@ -12,8 +12,8 @@ export default function Footer() {
               <span className="text-[var(--accent)]">L&apos;</span>Artisan Moderne
             </Link>
             <p className="text-white/60 max-w-md mt-4">
-              Notre boulangerie artisanale réinvente l'art du pain en mariant tradition et innovation.
-              Chaque création est le fruit d'un savoir-faire d'exception et d'une quête permanente d'excellence.
+              Notre boulangerie artisanale réinvente l&apos;art du pain en mariant tradition et innovation.
+              Chaque création est le fruit d&apos;un savoir-faire d&apos;exception et d&apos;une quête permanente d&apos;excellence.
             </p>
             <div className="flex space-x-4 mt-6">
               {['facebook', 'instagram', 'twitter', 'pinterest'].map((social) => (
@@ -70,7 +70,7 @@ export default function Footer() {
         
         <div className="border-t border-white/10 mt-12 pt-8 flex flex-col md:flex-row justify-between items-center">
           <p className="text-white/40 text-sm">
-            &copy; {currentYear} L'Artisan Moderne. Tous droits réservés.
+            &copy; {currentYear} L&apos;Artisan Moderne. Tous droits réservés.
           </p>
           <div className="flex space-x-6 mt-4 md:mt-0">
             <Link href="/mentions-legales" className="text-white/40 hover:text-white/70 text-sm transition-colors">
