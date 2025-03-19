@@ -4,24 +4,45 @@ import { useEffect, useRef, useState } from 'react';
 import Image from 'next/image';
 
 export default function ScrollingBaguette() {
-  const [scrollProgress, setScrollProgress] = useState(0);
-  const baguetteRef = useRef<HTMLDivElement>(null);
+  const [scrollPosition, setScrollPosition] = useState(0);
+  const [activeSection, setActiveSection] = useState(0);
+  const containerRef = useRef<HTMLDivElement>(null);
   
   useEffect(() => {
+    // Fonction pour gérer le défilement
     const handleScroll = () => {
-      if (!baguetteRef.current) return;
+      // Position de défilement actuelle
+      const currentScrollPos = window.scrollY;
       
-      const scrollTop = window.scrollY;
-      const docHeight = document.body.offsetHeight;
-      const winHeight = window.innerHeight;
-      const scrollPercent = scrollTop / (docHeight - winHeight);
+      // Hauteur du viewport
+      const viewportHeight = window.innerHeight;
       
-      // Use a slower multiplier for more gradual transitions
-      setScrollProgress(Math.min(scrollPercent * 1.2, 1));
+      // Position par rapport au conteneur
+      if (containerRef.current) {
+        const { top, height } = containerRef.current.getBoundingClientRect();
+        
+        // Calculer la progression du défilement dans ce conteneur (0 à 1)
+        const scrollProgress = Math.max(0, Math.min(1, (viewportHeight - top) / (viewportHeight + height)));
+        
+        setScrollPosition(scrollProgress);
+        
+        // Déterminer la section active basée sur la progression
+        if (scrollProgress < 0.3) {
+          setActiveSection(0); // Introduction et baguette
+        } else if (scrollProgress < 0.6) {
+          setActiveSection(1); // L'Artisan
+        } else if (scrollProgress < 0.9) {
+          setActiveSection(2); // Moderne
+        } else {
+          setActiveSection(3); // Section finale/transition
+        }
+      }
     };
     
     window.addEventListener('scroll', handleScroll);
     window.addEventListener('resize', handleScroll);
+    // Initialiser
+    handleScroll();
     
     return () => {
       window.removeEventListener('scroll', handleScroll);
@@ -29,180 +50,198 @@ export default function ScrollingBaguette() {
     };
   }, []);
   
-  // Calculate the opacity for the initial fade-in effect
-  // Start at 0 and reach full opacity at 20% scroll
-  const initialFadeOpacity = Math.min(scrollProgress * 5, 1);
+  // Calculer les opacités pour les transitions entre sections
+  const introOpacity = activeSection === 0 
+    ? Math.min(scrollPosition * 3, 1) 
+    : (activeSection > 0 ? 0 : 1);
   
-  // Increased spacing between animations with clear boundaries
-  // First text appears at 15% and stays until 35%
-  const lArtisanOpacity = scrollProgress > 0.15 && scrollProgress < 0.35 
-    ? Math.min((scrollProgress - 0.15) * 4, 1) 
-    : (scrollProgress >= 0.35 && scrollProgress < 0.4 
-        ? 1 
-        : (scrollProgress >= 0.4 
-            ? Math.max(1 - (scrollProgress - 0.4) * 10, 0) // Fast fade out
-            : 0));
+  const section1Opacity = activeSection === 1 
+    ? Math.min((scrollPosition - 0.3) * 3, 1) 
+    : (activeSection > 1 ? 0 : (activeSection < 1 ? 0 : 1));
   
-  // First content section appears at 25% and fades out at 50% - with a gap before next section
-  const firstSectionOpacity = scrollProgress > 0.25 
-    ? (scrollProgress < 0.5 
-        ? Math.min((scrollProgress - 0.25) * 3, 1) 
-        : Math.max(1 - (scrollProgress - 0.5) * 15, 0)) // Very fast fade out
+  const section2Opacity = activeSection === 2 
+    ? Math.min((scrollPosition - 0.6) * 3, 1) 
+    : (activeSection > 2 ? 0 : (activeSection < 2 ? 0 : 1));
+  
+  const finalSectionOpacity = activeSection === 3 
+    ? Math.min((scrollPosition - 0.9) * 10, 1) 
     : 0;
   
-  // Second text appears at 55% (after first content has disappeared)
-  const moderneOpacity = scrollProgress > 0.55 && scrollProgress < 0.7 
-    ? Math.min((scrollProgress - 0.55) * 5, 1) 
-    : (scrollProgress >= 0.7 
-        ? Math.max(1 - (scrollProgress - 0.7) * 10, 0) // Fast fade out
-        : 0);
+  // Transformations 3D pour chaque section
+  const transformSection1 = activeSection === 0 
+    ? `perspective(1000px) rotateY(0deg)` 
+    : `perspective(1000px) rotateY(-20deg) translateX(-100px) scale(0.8)`;
   
-  // Second content section appears at 65% (after moderne text has started appearing) and fades out at 80%
-  const secondSectionOpacity = scrollProgress > 0.65 
-    ? (scrollProgress < 0.8 
-        ? Math.min((scrollProgress - 0.65) * 6, 1) // Quick fade in
-        : Math.max(1 - (scrollProgress - 0.8) * 15, 0)) // Very fast fade out
-    : 0;
+  const transformSection2 = activeSection === 1 
+    ? `perspective(1000px) rotateY(0deg)` 
+    : `perspective(1000px) rotateY(${activeSection < 1 ? '20deg' : '-20deg'}) translateX(${activeSection < 1 ? '100px' : '-100px'}) scale(0.8)`;
+  
+  const transformSection3 = activeSection === 2 
+    ? `perspective(1000px) rotateY(0deg)` 
+    : `perspective(1000px) rotateY(${activeSection < 2 ? '20deg' : '-20deg'}) translateX(${activeSection < 2 ? '100px' : '-100px'}) scale(0.8)`;
   
   return (
-    <div className="relative h-[250vh]" ref={baguetteRef}>
-      {/* Fixed background */}
-      <div className="fixed top-0 left-0 w-full h-screen flex items-center justify-center bg-black">
-        <div className="relative w-full max-w-6xl h-[80vh] mx-auto">
-          {/* Baguette image with reveal effect */}
-          <div 
-            className="absolute inset-0 flex items-center justify-center"
-            style={{
-              opacity: initialFadeOpacity, // Initial fade-in effect
-              transition: 'opacity 0.7s ease-out',
-            }}
-          >
-            <div 
-              className="relative w-full h-full overflow-hidden"
-              style={{
-                maskImage: `linear-gradient(90deg, transparent ${scrollProgress * 100}%, black 100%)`,
-                WebkitMaskImage: `linear-gradient(90deg, transparent ${scrollProgress * 100}%, black 100%)`,
-                transform: `scale(${1 + scrollProgress * 0.1})`,
-                opacity: 1 - scrollProgress * 0.2, // Slower fade out
-                transition: 'transform 0.7s ease-out',
-              }}
-            >
+    <div 
+      ref={containerRef} 
+      className="relative h-[400vh] overflow-hidden"
+    >
+      {/* Conteneur fixe pour garder le contenu en vue */}
+      <div className="fixed top-0 left-0 w-full h-screen flex items-center justify-center">
+        {/* Sections empilées avec z-index contrôlé par l'état actif */}
+        
+        {/* Section d'introduction - Baguette en plein écran */}
+        <div 
+          className="absolute inset-0 flex items-center justify-center transition-all duration-1000"
+          style={{ 
+            opacity: introOpacity,
+            zIndex: activeSection === 0 ? 30 : 10,
+            pointerEvents: activeSection === 0 ? 'auto' : 'none'
+          }}
+        >
+          <div className="relative w-full max-w-6xl h-[80vh] mx-auto overflow-hidden">
+            {/* Image de la baguette avec effet de révélation */}
+            <div className="relative w-full h-full">
               <Image
                 src="/images/baguette.jpg"
                 alt="Baguette artisanale"
                 fill
                 style={{ 
                   objectFit: 'contain',
-                  filter: `brightness(${1 - scrollProgress * 0.2}) contrast(${1 + scrollProgress * 0.3})`,
+                  transition: 'transform 1.2s ease-out, filter 1.2s ease-out',
+                  transform: `scale(${1 + scrollPosition * 0.05})`,
+                  filter: `brightness(${1 - scrollPosition * 0.3}) contrast(${1 + scrollPosition * 0.3})`
                 }}
                 priority
-                className="transition-all duration-700"
               />
+              {/* Overlay pour ajouter une ambiance */}
+              <div 
+                className="absolute inset-0 bg-gradient-to-b from-black/70 via-transparent to-black/70"
+                style={{
+                  opacity: scrollPosition * 0.7
+                }}
+              ></div>
             </div>
           </div>
-          
-          {/* L'Artisan text - appears after initial scroll */}
-          <div 
-            className="absolute inset-0 flex items-center justify-center pointer-events-none"
-            style={{ 
-              opacity: lArtisanOpacity,
-              transition: 'opacity 0.7s ease, transform 0.7s ease',
-              zIndex: 10,
-            }}
-          >
+        </div>
+        
+        {/* Section 1 - L'Artisan */}
+        <div 
+          className="absolute inset-0 flex items-center justify-center transition-all duration-1000"
+          style={{ 
+            opacity: section1Opacity,
+            transform: transformSection2,
+            zIndex: activeSection === 1 ? 30 : 20,
+            pointerEvents: activeSection === 1 ? 'auto' : 'none'
+          }}
+        >
+          <div className="max-w-5xl mx-auto px-6 text-center">
             <h2 
-              className="text-[var(--accent)] text-8xl font-light tracking-widest uppercase"
+              className="text-[var(--accent)] text-7xl md:text-8xl font-light tracking-widest uppercase mb-12"
               style={{
-                textShadow: '0 0 10px rgba(212, 175, 55, 0.5)',
-                transform: `translateY(-40px) scale(${1 + lArtisanOpacity * 0.1})`,
+                textShadow: '0 0 20px rgba(212, 175, 55, 0.4)'
               }}
             >
               L&apos;Artisan
             </h2>
+            
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-16">
+              <div className="text-left">
+                <h3 className="text-[var(--accent)] text-3xl mb-6">Tradition</h3>
+                <p className="text-white/90 leading-relaxed text-lg">
+                  Notre boulangerie perpétue les méthodes ancestrales, où chaque baguette est façonnée à la main 
+                  avec passion et savoir-faire. La transmission de ces gestes précis est au cœur de notre engagement.
+                </p>
+              </div>
+              
+              <div className="text-left">
+                <h3 className="text-[var(--accent)] text-3xl mb-6">Excellence</h3>
+                <p className="text-white/90 leading-relaxed text-lg">
+                  La recherche constante de la perfection guide notre travail quotidien. 
+                  Nous sélectionnons rigoureusement nos ingrédients pour garantir une qualité irréprochable 
+                  à chacune de nos créations.
+                </p>
+              </div>
+            </div>
           </div>
-          
-          {/* Moderne text - appears later */}
-          <div 
-            className="absolute inset-0 flex items-center justify-center pointer-events-none"
-            style={{ 
-              opacity: moderneOpacity,
-              transition: 'opacity 0.7s ease, transform 0.7s ease',
-              zIndex: 10,
-            }}
-          >
+        </div>
+        
+        {/* Section 2 - Moderne */}
+        <div 
+          className="absolute inset-0 flex items-center justify-center transition-all duration-1000"
+          style={{ 
+            opacity: section2Opacity,
+            transform: transformSection3,
+            zIndex: activeSection === 2 ? 30 : 20,
+            pointerEvents: activeSection === 2 ? 'auto' : 'none'
+          }}
+        >
+          <div className="max-w-5xl mx-auto px-6 text-center">
             <h2 
-              className="text-[var(--accent)] text-8xl font-light tracking-widest uppercase"
+              className="text-[var(--accent)] text-7xl md:text-8xl font-light tracking-widest uppercase mb-12"
               style={{
-                textShadow: '0 0 10px rgba(212, 175, 55, 0.5)',
-                transform: `translateY(40px) scale(${1 + moderneOpacity * 0.1})`,
+                textShadow: '0 0 20px rgba(212, 175, 55, 0.4)'
               }}
             >
               Moderne
             </h2>
-          </div>
-          
-          {/* Decorative elements */}
-          <div 
-            className="absolute inset-0 pointer-events-none"
-            style={{
-              opacity: Math.min(scrollProgress * 2, 0.2),
-              transition: 'opacity 0.7s ease',
-            }}
-          >
-            <div className="absolute top-[10%] left-[10%] w-16 h-16 border-t border-l border-[var(--accent)]"></div>
-            <div className="absolute bottom-[10%] right-[10%] w-16 h-16 border-b border-r border-[var(--accent)]"></div>
-          </div>
-        </div>
-      </div>
-      
-      {/* Content sections that appear as you scroll */}
-      <div className="relative">
-        {/* First section - appears at about 25% scroll and fades out at 50% */}
-        <div 
-          className="fixed top-0 left-0 w-full h-screen flex items-center justify-center pointer-events-none"
-          style={{ 
-            opacity: firstSectionOpacity,
-            transform: `translateY(${scrollProgress > 0.25 ? '0' : '50px'}) translateX(${scrollProgress > 0.5 ? (scrollProgress - 0.5) * -300 : 0}px)`,
-            transition: 'opacity 0.7s ease, transform 0.7s ease',
-            zIndex: 10,
-          }}
-        >
-          <div className="absolute bottom-[35%] left-[15%] max-w-md text-left">
-            <h2 className="text-[var(--accent)] mb-6 text-2xl">Tradition & Innovation</h2>
-            <p className="text-white/90 leading-relaxed">
-              Notre boulangerie marie l&apos;excellence artisanale à une vision résolument moderne.
-              Chaque baguette est façonnée à la main selon des méthodes ancestrales.
-            </p>
+            
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-16">
+              <div className="text-left">
+                <h3 className="text-[var(--accent)] text-3xl mb-6">Innovation</h3>
+                <p className="text-white/90 leading-relaxed text-lg">
+                  Notre vision contemporaine de la boulangerie nous pousse à innover constamment, 
+                  en intégrant les avancées technologiques pour sublimer les recettes traditionnelles 
+                  tout en préservant leur authenticité.
+                </p>
+              </div>
+              
+              <div className="text-left">
+                <h3 className="text-[var(--accent)] text-3xl mb-6">Saveurs Authentiques</h3>
+                <p className="text-white/90 leading-relaxed text-lg">
+                  Notre levain naturel, cultivé avec soin, confère à nos pains des arômes complexes 
+                  et une mie alvéolée parfaite. L'équilibre entre tradition et modernité se retrouve 
+                  dans chaque bouchée.
+                </p>
+              </div>
+            </div>
           </div>
         </div>
         
-        {/* Second section - appears at about 65% scroll and fades out at 80% */}
+        {/* Section finale - Transition vers la suite */}
         <div 
-          className="fixed top-0 left-0 w-full h-screen flex items-center justify-center pointer-events-none"
+          className="absolute inset-0 flex items-center justify-center transition-all duration-1000"
           style={{ 
-            opacity: secondSectionOpacity,
-            transform: `translateY(${scrollProgress > 0.65 ? '0' : '50px'}) translateX(${scrollProgress > 0.8 ? (scrollProgress - 0.8) * 300 : 0}px)`,
-            transition: 'opacity 0.7s ease, transform 0.7s ease',
-            zIndex: 10,
+            opacity: finalSectionOpacity,
+            zIndex: activeSection === 3 ? 40 : 0,
+            background: 'black',
+            pointerEvents: activeSection === 3 ? 'auto' : 'none'
           }}
         >
-          <div className="absolute top-[35%] right-[15%] max-w-md text-right">
-            <h2 className="text-[var(--accent)] mb-6 text-2xl">Saveurs Authentiques</h2>
-            <p className="text-white/90 leading-relaxed">
-              Des ingrédients soigneusement sélectionnés pour une expérience gustative incomparable.
-              Notre levain naturel confère à nos pains des arômes complexes et une mie alvéolée parfaite.
+          <div className="max-w-4xl mx-auto text-center px-6">
+            <h2 className="text-[var(--accent)] text-5xl md:text-6xl font-light mb-8">
+              Notre Engagement
+            </h2>
+            <p className="text-white/90 text-xl mb-8 max-w-3xl mx-auto">
+              Découvrez une expérience gustative unique, fruit de notre passion pour l'excellence 
+              et l'innovation dans le respect des traditions boulangères.
             </p>
+            <div className="inline-block">
+              <button className="button text-lg px-8 py-3">
+                Découvrir nos créations
+              </button>
+            </div>
           </div>
         </div>
       </div>
       
-      {/* Final animation marker - completely invisible but helps track when all animations are done */}
-      <div 
-        className="fixed top-0 left-0 w-full h-0 opacity-0 pointer-events-none"
-        style={{ 
-          opacity: scrollProgress > 0.9 ? 1 : 0, // Only becomes "active" at 90% scroll
-        }}
-      ></div>
+      {/* Marqueur invisible pour le scrolljacking - contrôle la hauteur du composant */}
+      <div className="opacity-0">
+        {/* Ce contenu est invisible mais définit la hauteur du composant pour le défilement */}
+        <div className="h-screen"></div>
+        <div className="h-screen"></div>
+        <div className="h-screen"></div>
+        <div className="h-screen"></div>
+      </div>
     </div>
   );
 } 
