@@ -37,9 +37,8 @@ export default function Header() {
         
         <nav className="hidden md:flex items-center space-x-10">
           {[
-            { name: 'Notre Histoire', path: '/notre-histoire' },
-            { name: 'Produits', path: '/#products' },
-            { name: 'Savoir-faire', path: '/savoir-faire' },
+            { name: 'Accueil', path: '/' },
+            { name: 'Nos Créations', path: '/nos-creations' },
             { name: 'Contact', path: '/#contact' }
           ].map((item) => (
             <Link 
@@ -84,9 +83,8 @@ export default function Header() {
         <div className="container mx-auto px-6 py-10">
           <nav className="flex flex-col space-y-6">
             {[
-              { name: 'Notre Histoire', path: '/notre-histoire' },
-              { name: 'Produits', path: '/#products' },
-              { name: 'Savoir-faire', path: '/savoir-faire' },
+              { name: 'Accueil', path: '/' },
+              { name: 'Nos Créations', path: '/nos-creations' },
               { name: 'Contact', path: '/#contact' }
             ].map((item, index) => (
               <Link 
