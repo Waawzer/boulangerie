@@ -33,39 +33,39 @@ export default function ScrollingBaguette() {
   // Start at 0 and reach full opacity at 20% scroll
   const initialFadeOpacity = Math.min(scrollProgress * 5, 1);
   
-  // Increased spacing between animations
-  // First text appears at 15% and stays until 40%
-  const lArtisanOpacity = scrollProgress > 0.15 && scrollProgress < 0.4 
+  // Increased spacing between animations with clear boundaries
+  // First text appears at 15% and stays until 35%
+  const lArtisanOpacity = scrollProgress > 0.15 && scrollProgress < 0.35 
     ? Math.min((scrollProgress - 0.15) * 4, 1) 
-    : (scrollProgress >= 0.4 && scrollProgress < 0.45 
+    : (scrollProgress >= 0.35 && scrollProgress < 0.4 
         ? 1 
-        : (scrollProgress >= 0.45 
-            ? Math.max(1 - (scrollProgress - 0.45) * 5, 0) 
+        : (scrollProgress >= 0.4 
+            ? Math.max(1 - (scrollProgress - 0.4) * 10, 0) // Fast fade out
             : 0));
   
-  // First content section appears at 25% and fades out at 60%
+  // First content section appears at 25% and fades out at 50% - with a gap before next section
   const firstSectionOpacity = scrollProgress > 0.25 
-    ? (scrollProgress < 0.6 
-        ? Math.min((scrollProgress - 0.25) * 2.5, 1) // Slower fade in
-        : Math.max(1 - (scrollProgress - 0.6) * 10, 0)) // Fade out faster at 60%
+    ? (scrollProgress < 0.5 
+        ? Math.min((scrollProgress - 0.25) * 3, 1) 
+        : Math.max(1 - (scrollProgress - 0.5) * 15, 0)) // Very fast fade out
     : 0;
   
-  // Second text appears at 50% and stays until 75%
-  const moderneOpacity = scrollProgress > 0.5 && scrollProgress < 0.75 
-    ? Math.min((scrollProgress - 0.5) * 4, 1) 
-    : (scrollProgress >= 0.75 
-        ? Math.max(1 - (scrollProgress - 0.75) * 5, 0) 
+  // Second text appears at 55% (after first content has disappeared)
+  const moderneOpacity = scrollProgress > 0.55 && scrollProgress < 0.7 
+    ? Math.min((scrollProgress - 0.55) * 5, 1) 
+    : (scrollProgress >= 0.7 
+        ? Math.max(1 - (scrollProgress - 0.7) * 10, 0) // Fast fade out
         : 0);
   
-  // Second content section appears at 60% and fades out at 80%
-  const secondSectionOpacity = scrollProgress > 0.6 
+  // Second content section appears at 65% (after moderne text has started appearing) and fades out at 80%
+  const secondSectionOpacity = scrollProgress > 0.65 
     ? (scrollProgress < 0.8 
-        ? Math.min((scrollProgress - 0.6) * 5, 1) 
-        : Math.max(1 - (scrollProgress - 0.8) * 10, 0))
+        ? Math.min((scrollProgress - 0.65) * 6, 1) // Quick fade in
+        : Math.max(1 - (scrollProgress - 0.8) * 15, 0)) // Very fast fade out
     : 0;
   
   return (
-    <div className="relative h-[300vh]" ref={baguetteRef}>
+    <div className="relative h-[250vh]" ref={baguetteRef}>
       {/* Fixed background */}
       <div className="fixed top-0 left-0 w-full h-screen flex items-center justify-center bg-black">
         <div className="relative w-full max-w-6xl h-[80vh] mx-auto">
@@ -157,12 +157,12 @@ export default function ScrollingBaguette() {
       
       {/* Content sections that appear as you scroll */}
       <div className="relative">
-        {/* First section - appears at about 25% scroll and fades out at 60% */}
+        {/* First section - appears at about 25% scroll and fades out at 50% */}
         <div 
           className="fixed top-0 left-0 w-full h-screen flex items-center justify-center pointer-events-none"
           style={{ 
             opacity: firstSectionOpacity,
-            transform: `translateY(${scrollProgress > 0.25 ? '0' : '50px'}) translateX(${scrollProgress > 0.6 ? (scrollProgress - 0.6) * -200 : 0}px)`,
+            transform: `translateY(${scrollProgress > 0.25 ? '0' : '50px'}) translateX(${scrollProgress > 0.5 ? (scrollProgress - 0.5) * -300 : 0}px)`,
             transition: 'opacity 0.7s ease, transform 0.7s ease',
             zIndex: 10,
           }}
@@ -176,12 +176,12 @@ export default function ScrollingBaguette() {
           </div>
         </div>
         
-        {/* Second section - appears at about 60% scroll and fades out at 80% */}
+        {/* Second section - appears at about 65% scroll and fades out at 80% */}
         <div 
           className="fixed top-0 left-0 w-full h-screen flex items-center justify-center pointer-events-none"
           style={{ 
             opacity: secondSectionOpacity,
-            transform: `translateY(${scrollProgress > 0.6 ? '0' : '50px'}) translateX(${scrollProgress > 0.8 ? (scrollProgress - 0.8) * 200 : 0}px)`,
+            transform: `translateY(${scrollProgress > 0.65 ? '0' : '50px'}) translateX(${scrollProgress > 0.8 ? (scrollProgress - 0.8) * 300 : 0}px)`,
             transition: 'opacity 0.7s ease, transform 0.7s ease',
             zIndex: 10,
           }}
@@ -195,6 +195,14 @@ export default function ScrollingBaguette() {
           </div>
         </div>
       </div>
+      
+      {/* Final animation marker - completely invisible but helps track when all animations are done */}
+      <div 
+        className="fixed top-0 left-0 w-full h-0 opacity-0 pointer-events-none"
+        style={{ 
+          opacity: scrollProgress > 0.9 ? 1 : 0, // Only becomes "active" at 90% scroll
+        }}
+      ></div>
     </div>
   );
 } 

@@ -20,10 +20,11 @@ export default function Home() {
         <ScrollingBaguette />
       </section>
       
-      {/* Extra large spacer to completely separate content sections and ensure no overlap */}
-      <div className="h-[150vh] bg-gradient-to-b from-black to-black/95"></div>
+      {/* Massive spacer to completely separate content - this ensures that ScrollingBaguette 
+          animations are fully completed before the next section appears */}
+      <div className="h-[300vh] bg-gradient-to-b from-black to-black/95"></div>
       
-      {/* Products showcase section - With significant distance from previous content */}
+      {/* Products showcase section - With extreme distance from previous content */}
       <section className="relative py-40 bg-black" id="products">
         <ProductsSection />
       </section>
