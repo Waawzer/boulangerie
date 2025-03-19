@@ -175,7 +175,7 @@ export default function ScrollingBaguette() {
                     opacity: ctaButtonOpacity,
                     transform: `translateY(${(1 - ctaButtonOpacity) * 20}px)`,
                     transition: 'transform 1s ease, opacity 1s ease',
-                    transitionDelay: '0.1s',
+                    transitionDelay: '0.5s',
                   }}
                 >
                   Nos Créations
@@ -187,7 +187,7 @@ export default function ScrollingBaguette() {
                     opacity: ctaButtonOpacity,
                     transform: `translateY(${(1 - ctaButtonOpacity) * 20}px)`,
                     transition: 'transform 1s ease, opacity 1s ease',
-                    transitionDelay: '0.2s',
+                    transitionDelay: '0.8s',
                   }}
                 >
                   Rencontrons-nous
