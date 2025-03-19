@@ -20,15 +20,15 @@ export default function Home() {
         <ScrollingBaguette />
       </section>
       
-      {/* Spacer to push Products section further down */}
-      <div className="h-[50vh] bg-gradient-to-b from-black to-black/95"></div>
+      {/* Large spacer to prevent content overlap - ensures previous animations have completed */}
+      <div className="h-[100vh] bg-gradient-to-b from-black to-black/95"></div>
       
-      {/* Products showcase section - Further down in the scrolling */}
+      {/* Products showcase section - Moved much further down to prevent overlap */}
       <section className="relative py-32 bg-black" id="products">
         <ProductsSection />
       </section>
       
-      {/* Another spacer for better section spacing */}
+      {/* Spacer between Products and Contact sections */}
       <div className="h-[30vh] bg-gradient-to-b from-black/95 to-black/90"></div>
       
       {/* Contact section */}

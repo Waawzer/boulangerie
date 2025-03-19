@@ -43,11 +43,11 @@ export default function ScrollingBaguette() {
             ? Math.max(1 - (scrollProgress - 0.45) * 5, 0) 
             : 0));
   
-  // First content section appears at 25% and fades out at 70%
+  // First content section appears at 25% and fades out at 60%
   const firstSectionOpacity = scrollProgress > 0.25 
-    ? (scrollProgress < 0.7 
+    ? (scrollProgress < 0.6 
         ? Math.min((scrollProgress - 0.25) * 2.5, 1) // Slower fade in
-        : Math.max(1 - (scrollProgress - 0.7) * 5, 0)) // Fade out at 70%
+        : Math.max(1 - (scrollProgress - 0.6) * 10, 0)) // Fade out faster at 60%
     : 0;
   
   // Second text appears at 50% and stays until 75%
@@ -57,15 +57,12 @@ export default function ScrollingBaguette() {
         ? Math.max(1 - (scrollProgress - 0.75) * 5, 0) 
         : 0);
   
-  // Second content section appears at 55% and fades out at 90%
-  const secondSectionOpacity = scrollProgress > 0.55 
-    ? (scrollProgress < 0.9 
-        ? Math.min((scrollProgress - 0.55) * 3, 1) 
-        : Math.max(1 - (scrollProgress - 0.9) * 10, 0))
+  // Second content section appears at 60% and fades out at 80%
+  const secondSectionOpacity = scrollProgress > 0.6 
+    ? (scrollProgress < 0.8 
+        ? Math.min((scrollProgress - 0.6) * 5, 1) 
+        : Math.max(1 - (scrollProgress - 0.8) * 10, 0))
     : 0;
-    
-  // Calculate opacity for the boulangerie image at the end - appears at 95%
-  const boulangerieOpacity = scrollProgress > 0.95 ? Math.min((scrollProgress - 0.95) * 20, 1) : 0;
   
   return (
     <div className="relative h-[300vh]" ref={baguetteRef}>
@@ -101,34 +98,6 @@ export default function ScrollingBaguette() {
                 priority
                 className="transition-all duration-700"
               />
-            </div>
-          </div>
-          
-          {/* Boulangerie image that appears at the end */}
-          <div 
-            className="absolute inset-0 flex items-center justify-center"
-            style={{
-              opacity: boulangerieOpacity,
-              transition: 'opacity 1s ease-out',
-              zIndex: 5,
-            }}
-          >
-            <div className="relative w-full h-full overflow-hidden">
-              <Image
-                src="/images/boulangerie.jpg"
-                alt="Notre boulangerie"
-                fill
-                style={{ 
-                  objectFit: 'cover',
-                }}
-                className="transition-all duration-700"
-              />
-              <div 
-                className="absolute inset-0 bg-black/40 backdrop-blur-[2px]"
-                style={{
-                  opacity: boulangerieOpacity,
-                }}
-              ></div>
             </div>
           </div>
           
@@ -188,12 +157,12 @@ export default function ScrollingBaguette() {
       
       {/* Content sections that appear as you scroll */}
       <div className="relative">
-        {/* First section - appears at about 25% scroll and fades out at 70% */}
+        {/* First section - appears at about 25% scroll and fades out at 60% */}
         <div 
           className="fixed top-0 left-0 w-full h-screen flex items-center justify-center pointer-events-none"
           style={{ 
             opacity: firstSectionOpacity,
-            transform: `translateY(${scrollProgress > 0.25 ? '0' : '50px'}) translateX(${scrollProgress > 0.7 ? (scrollProgress - 0.7) * -200 : 0}px)`,
+            transform: `translateY(${scrollProgress > 0.25 ? '0' : '50px'}) translateX(${scrollProgress > 0.6 ? (scrollProgress - 0.6) * -200 : 0}px)`,
             transition: 'opacity 0.7s ease, transform 0.7s ease',
             zIndex: 10,
           }}
@@ -207,12 +176,12 @@ export default function ScrollingBaguette() {
           </div>
         </div>
         
-        {/* Second section - appears at about 55% scroll and fades out at 90% */}
+        {/* Second section - appears at about 60% scroll and fades out at 80% */}
         <div 
           className="fixed top-0 left-0 w-full h-screen flex items-center justify-center pointer-events-none"
           style={{ 
             opacity: secondSectionOpacity,
-            transform: `translateY(${scrollProgress > 0.55 ? '0' : '50px'}) translateX(${scrollProgress > 0.9 ? (scrollProgress - 0.9) * 200 : 0}px)`,
+            transform: `translateY(${scrollProgress > 0.6 ? '0' : '50px'}) translateX(${scrollProgress > 0.8 ? (scrollProgress - 0.8) * 200 : 0}px)`,
             transition: 'opacity 0.7s ease, transform 0.7s ease',
             zIndex: 10,
           }}
