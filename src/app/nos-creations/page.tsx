@@ -94,7 +94,7 @@ export default function NosCreationsPage() {
             Venez nous rendre visite ou commandez en ligne pour découvrir notre gamme complète.
           </p>
           <div className="flex flex-col sm:flex-row items-center justify-center gap-6">
-            <Link href="/#contact" className="button">Nous contacter</Link>
+            <Link href="/contact" className="button">Nous contacter</Link>
             <Link href="/" className="text-white hover:text-[var(--accent)] transition-colors">
               Retour à l&apos;accueil &rarr;
             </Link>

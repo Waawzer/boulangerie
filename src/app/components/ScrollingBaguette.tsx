@@ -158,27 +158,41 @@ export default function ScrollingBaguette() {
           >
             <div className="text-center">
               <h3 
-                className="text-white/90 mb-6 text-2xl font-light"
+                className="text-white/90 mb-8 text-2xl font-light"
                 style={{
                   opacity: ctaButtonOpacity,
                   transform: `translateY(${(1 - ctaButtonOpacity) * 20}px)`,
                   transition: 'transform 1s ease, opacity 1s ease',
                 }}
               >
-                Découvrez notre sélection
+                Découvrez notre univers
               </h3>
-              <Link 
-                href="/nos-creations" 
-                className="button text-lg px-8 py-4 hover-lift"
-                style={{
-                  opacity: ctaButtonOpacity,
-                  transform: `translateY(${(1 - ctaButtonOpacity) * 20}px)`,
-                  transition: 'transform 1s ease, opacity 1s ease',
-                  transitionDelay: '0.1s',
-                }}
-              >
-                Nos Créations
-              </Link>
+              <div className="flex flex-col sm:flex-row items-center justify-center gap-6">
+                <Link 
+                  href="/nos-creations" 
+                  className="button text-lg px-8 py-4 hover-lift"
+                  style={{
+                    opacity: ctaButtonOpacity,
+                    transform: `translateY(${(1 - ctaButtonOpacity) * 20}px)`,
+                    transition: 'transform 1s ease, opacity 1s ease',
+                    transitionDelay: '0.1s',
+                  }}
+                >
+                  Nos Créations
+                </Link>
+                <Link 
+                  href="/contact" 
+                  className="button button-outline text-lg px-8 py-4 hover-lift"
+                  style={{
+                    opacity: ctaButtonOpacity,
+                    transform: `translateY(${(1 - ctaButtonOpacity) * 20}px)`,
+                    transition: 'transform 1s ease, opacity 1s ease',
+                    transitionDelay: '0.2s',
+                  }}
+                >
+                  Rencontrons-nous
+                </Link>
+              </div>
             </div>
           </div>
           

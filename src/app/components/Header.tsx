@@ -39,7 +39,7 @@ export default function Header() {
           {[
             { name: 'Accueil', path: '/' },
             { name: 'Nos Créations', path: '/nos-creations' },
-            { name: 'Contact', path: '/#contact' }
+            { name: 'Contact', path: '/contact' }
           ].map((item) => (
             <Link 
               key={item.name} 
@@ -85,7 +85,7 @@ export default function Header() {
             {[
               { name: 'Accueil', path: '/' },
               { name: 'Nos Créations', path: '/nos-creations' },
-              { name: 'Contact', path: '/#contact' }
+              { name: 'Contact', path: '/contact' }
             ].map((item, index) => (
               <Link 
                 key={item.name} 
@@ -109,7 +109,7 @@ export default function Header() {
             opacity: menuOpen ? 1 : 0,
             transform: menuOpen ? 'translateY(0)' : 'translateY(10px)'
           }}>
-            <button className="button w-full">Contactez-nous</button>
+            <Link href="/contact" className="button w-full">Contactez-nous</Link>
           </div>
         </div>
       </div>
