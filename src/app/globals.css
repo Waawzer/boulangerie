@@ -6,9 +6,11 @@
   --accent: #d4af37; /* Gold accent color */
   --text-primary: #ffffff;
   --text-secondary: #a0a0a0;
-  --transition-slow: 0.5s ease;
-  --transition-medium: 0.3s ease;
-  --transition-fast: 0.15s ease;
+  --transition-slow: 0.8s ease;
+  --transition-medium: 0.5s ease;
+  --transition-fast: 0.3s ease;
+  --section-spacing: 8rem;
+  --content-spacing: 2.5rem;
 }
 
 @theme inline {
@@ -33,6 +35,7 @@ body {
   overflow-x: hidden;
   margin: 0;
   padding: 0;
+  line-height: 1.7;
 }
 
 /* Smooth scrolling for the bread effect */
@@ -58,19 +61,25 @@ html {
 h1, h2, h3, h4, h5, h6 {
   font-weight: 300;
   letter-spacing: -0.025em;
+  margin-bottom: var(--content-spacing);
 }
 
 h1 {
-  font-size: clamp(2.5rem, 5vw, 4rem);
+  font-size: clamp(2.5rem, 5vw, 4.5rem);
 }
 
 h2 {
-  font-size: clamp(2rem, 4vw, 3rem);
+  font-size: clamp(2rem, 4vw, 3.5rem);
+}
+
+h3 {
+  font-size: clamp(1.5rem, 3vw, 2rem);
 }
 
 p {
-  line-height: 1.7;
+  line-height: 1.8;
   font-weight: 300;
+  margin-bottom: 1.5rem;
 }
 
 /* Button styles */
@@ -78,19 +87,61 @@ button, .button {
   background: transparent;
   border: 1px solid var(--accent);
   color: var(--accent);
-  padding: 0.75rem 1.5rem;
+  padding: 0.85rem 1.75rem;
   border-radius: 2rem;
   font-weight: 400;
   transition: all var(--transition-medium);
   cursor: pointer;
+  letter-spacing: 0.5px;
 }
 
 button:hover, .button:hover {
   background: var(--accent);
   color: var(--background);
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(212, 175, 55, 0.25);
+}
+
+/* Section spacing */
+section {
+  padding: var(--section-spacing) 0;
 }
 
 /* Custom utilities */
 .bg-gradient-radial {
   background-image: radial-gradient(var(--tw-gradient-stops));
+}
+
+/* Animations */
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-up {
+  animation: fadeUp 0.8s ease forwards;
+}
+
+/* Transitions */
+.transition-standard {
+  transition: all var(--transition-medium);
+}
+
+.transition-slow {
+  transition: all var(--transition-slow);
+}
+
+/* Hover effects */
+.hover-lift {
+  transition: transform var(--transition-medium);
+}
+
+.hover-lift:hover {
+  transform: translateY(-5px);
 }
