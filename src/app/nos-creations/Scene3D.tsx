@@ -6,7 +6,14 @@ import { useGLTF, Environment, useProgress, Html, Preload } from '@react-three/d
 import { EffectComposer, Bloom } from '@react-three/postprocessing';
 import * as THREE from 'three';
 
-// Préchargement du modèle 3D
+// Préchargement du modèle 3D - fonction exportée
+export function preloadBreadModel() {
+  useGLTF.preload("/images/bread.glb");
+  console.log("Modèle 3D préchargé par la fonction Scene3D.preloadBreadModel()");
+  return true;
+}
+
+// Préchargement implicite lors de l'import du module
 useGLTF.preload("/images/bread.glb");
 
 // Composant de chargement

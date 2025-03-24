@@ -98,14 +98,38 @@ export default function NosCreationsPage() {
   useEffect(() => {
     setIsMounted(true);
     
-    // Préchargement des ressources
-    const preloadTimer = setTimeout(() => {
-      fetch('/images/bread.glb')
-        .then(() => setIsModelPreloaded(true))
-        .catch(() => setIsModelPreloaded(true)); // Préchargé même en cas d'erreur
-    }, 10);
-    
-    return () => clearTimeout(preloadTimer);
+    // Vérifier si le modèle est déjà préchargé par la page d'accueil
+    try {
+      // On utilise sessionStorage pour vérifier si on a déjà préchargé le modèle
+      const isAlreadyPreloaded = sessionStorage.getItem('modelPreloaded');
+      
+      if (isAlreadyPreloaded) {
+        console.log('Le modèle a déjà été préchargé par la page d\'accueil');
+        setIsModelPreloaded(true);
+      } else {
+        // Préchargement des ressources
+        const preloadTimer = setTimeout(() => {
+          fetch('/images/bread.glb')
+            .then(() => {
+              setIsModelPreloaded(true);
+              // Marquer comme préchargé pour les futures navigations
+              sessionStorage.setItem('modelPreloaded', 'true');
+            })
+            .catch(() => setIsModelPreloaded(true)); // Préchargé même en cas d'erreur
+        }, 10);
+        
+        return () => clearTimeout(preloadTimer);
+      }
+    } catch (e) {
+      // Si sessionStorage n'est pas disponible, on précharge directement
+      const preloadTimer = setTimeout(() => {
+        fetch('/images/bread.glb')
+          .then(() => setIsModelPreloaded(true))
+          .catch(() => setIsModelPreloaded(true));
+      }, 10);
+      
+      return () => clearTimeout(preloadTimer);
+    }
   }, []);
   
   // Products data
