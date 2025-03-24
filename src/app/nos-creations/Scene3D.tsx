@@ -57,7 +57,7 @@ function BreadModel({ scrollYProgress, isReady }: { scrollYProgress: { get: () =
       
       try {
         useGLTF.preload(alternativePath, true);
-      } catch (error) {
+      } catch (_) {
         console.error("Impossible de charger le modèle même en alternative");
       }
     };
@@ -127,9 +127,9 @@ function BreadModel({ scrollYProgress, isReady }: { scrollYProgress: { get: () =
       meshRef.current.scale.set(0, 0, 0);
     } else {
       // Animation de scale pour une apparition progressive
-      meshRef.current.scale.x = THREE.MathUtils.lerp(meshRef.current.scale.x, 30, 0.05);
-      meshRef.current.scale.y = THREE.MathUtils.lerp(meshRef.current.scale.y, 30, 0.05);
-      meshRef.current.scale.z = THREE.MathUtils.lerp(meshRef.current.scale.z, 30, 0.05);
+      meshRef.current.scale.x = THREE.MathUtils.lerp(meshRef.current.scale.x, 25, 0.02);
+      meshRef.current.scale.y = THREE.MathUtils.lerp(meshRef.current.scale.y, 25, 0.02);
+      meshRef.current.scale.z = THREE.MathUtils.lerp(meshRef.current.scale.z, 25, 0.02);
     }
   });
   
