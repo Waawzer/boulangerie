@@ -109,15 +109,16 @@ export default function NosCreationsPage() {
       } else {
         // Préchargement des ressources
         const preloadTimer = setTimeout(() => {
-          // Tenter de précharger le modèle
-          fetch('/bread.glb')
+          // Tenter de précharger le modèle avec timestamp pour éviter les problèmes de cache
+          const timestamp = Date.now();
+          fetch(`/bread.glb?t=${timestamp}`)
             .then(() => {
-              console.log('Préchargé depuis /bread.glb');
+              console.log(`Préchargé depuis /bread.glb?t=${timestamp}`);
               setIsModelPreloaded(true);
               sessionStorage.setItem('modelPreloaded', 'true');
             })
-            .catch(() => {
-              console.error('Échec du préchargement du modèle');
+            .catch((error) => {
+              console.error('Échec du préchargement du modèle:', error);
               setIsModelPreloaded(true); // Continuer quand même
             });
         }, 10);
@@ -127,13 +128,15 @@ export default function NosCreationsPage() {
     } catch {
       // Si sessionStorage n'est pas disponible, on précharge directement
       const preloadTimer = setTimeout(() => {
-        fetch('/bread.glb')
+        // Timestamp pour éviter les problèmes de cache
+        const timestamp = Date.now();
+        fetch(`/bread.glb?t=${timestamp}`)
           .then(() => {
-            console.log('Préchargé depuis /bread.glb (fallback)');
+            console.log(`Préchargé depuis /bread.glb?t=${timestamp} (fallback)`);
             setIsModelPreloaded(true);
           })
-          .catch(() => {
-            console.error('Échec du préchargement du modèle (fallback)');
+          .catch((error) => {
+            console.error('Échec du préchargement du modèle (fallback):', error);
             setIsModelPreloaded(true);
           });
       }, 10);

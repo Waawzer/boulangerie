@@ -8,14 +8,18 @@ import * as THREE from 'three';
 
 // Préchargement du modèle 3D - fonction exportée
 export function preloadBreadModel() {
-  // Utiliser un chemin absolu
-  useGLTF.preload("/bread.glb", true);
-  console.log("Modèle 3D préchargé depuis /bread.glb");
+  // Ajouter un timestamp pour éviter les problèmes de cache
+  const timestamp = Date.now();
+  const modelPath = `/bread.glb?t=${timestamp}`;
+  useGLTF.preload(modelPath, true);
+  console.log(`Modèle 3D préchargé depuis ${modelPath}`);
   return true;
 }
 
 // Préchargement implicite lors de l'import du module
-useGLTF.preload("/bread.glb", true);
+const timestamp = Date.now();
+const MODEL_PATH = `/bread.glb?t=${timestamp}`;
+useGLTF.preload(MODEL_PATH, true);
 
 // Composant de chargement
 function Loader() {
@@ -32,8 +36,44 @@ function Loader() {
 
 // Model component for the 3D bread
 function BreadModel({ scrollYProgress, isReady }: { scrollYProgress: { get: () => number }, isReady: boolean }) {
-  // Utiliser le chemin absolu
-  const { scene } = useGLTF("/bread.glb", true);
+  // Essayer de charger avec plusieurs méthodes en cas d'échec
+  const [modelError, setModelError] = useState(false);
+  
+  // Première tentative avec timestamp
+  const gltfResult = useGLTF(MODEL_PATH, true);
+  const { scene } = gltfResult;
+  
+  // Gestion d'erreur et alternative de chargement
+  useEffect(() => {
+    const handleError = () => {
+      console.log("Fallback: tentative alternative de chargement du modèle");
+      
+      // Nettoyer les ressources du loader
+      useGLTF.clear(MODEL_PATH);
+      
+      // Forcer une nouvelle tentative avec un timestamp différent
+      const newTimestamp = Date.now();
+      const alternativePath = `/bread.glb?t=${newTimestamp}&retry=true`;
+      
+      try {
+        useGLTF.preload(alternativePath, true);
+      } catch (error) {
+        console.error("Impossible de charger le modèle même en alternative");
+      }
+    };
+    
+    if (modelError) {
+      handleError();
+    }
+    
+    // Création d'un gestionnaire d'erreurs pour l'élément canvas
+    const canvasElement = document.querySelector('canvas');
+    if (canvasElement) {
+      canvasElement.addEventListener('error', () => setModelError(true));
+      return () => canvasElement.removeEventListener('error', () => setModelError(true));
+    }
+  }, [modelError]);
+  
   const meshRef = useRef<THREE.Group>(null);
   const [initialRotation] = useState(Math.random() * Math.PI * 2);
   

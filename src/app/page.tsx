@@ -12,9 +12,10 @@ export default function Home() {
     // Préchargement du modèle bread.glb pour la page Nos Créations via fetch
     const preloadModel = async () => {
       try {
-        // Précharger le modèle via fetch
-        await fetch('/bread.glb');
-        console.log('Modèle 3D préchargé avec succès via fetch depuis /bread.glb');
+        // Précharger le modèle via fetch avec un timestamp pour éviter les problèmes de cache
+        const timestamp = Date.now();
+        await fetch(`/bread.glb?t=${timestamp}`);
+        console.log(`Modèle 3D préchargé avec succès via fetch depuis /bread.glb?t=${timestamp}`);
         
         // Marquer comme préchargé pour les futures navigations
         try {
