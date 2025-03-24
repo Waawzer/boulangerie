@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import { motion } from 'framer-motion';
 
 export default function HeroSection() {
   const [isVisible, setIsVisible] = useState(false);
@@ -15,7 +16,7 @@ export default function HeroSection() {
   }, []);
   
   return (
-    <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
+    <section className="relative h-screen flex items-center justify-center overflow-hidden">
       <div className="absolute inset-0 bg-black z-0"></div>
       
       <div className="container mx-auto px-6 py-24 relative z-10">
@@ -36,26 +37,45 @@ export default function HeroSection() {
             Découvrez notre vision futuriste de la boulangerie artisanale, où tradition séculaire 
             et innovation avant-gardiste se rencontrent pour créer une expérience gustative unique.
           </p>
-          
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-6">
-            <button className="button">Découvrir nos créations</button>
-            <button className="text-white hover:text-[var(--accent)] transition-colors">
-              En savoir plus &rarr;
-            </button>
-          </div>
         </div>
       </div>
       
-      <div className={`absolute bottom-12 left-1/2 transform -translate-x-1/2 z-10 transition-all duration-1000 ${
-        isVisible 
-          ? 'opacity-100 transform translate-y-0' 
-          : 'opacity-0 transform translate-y-10'
-      }`}>
+      {/* Scroll indicator animation */}
+      <motion.div 
+        className="absolute bottom-12 left-1/2 transform -translate-x-1/2 z-10"
+        initial={{ opacity: 0, y: 10 }}
+        animate={{ 
+          opacity: isVisible ? 1 : 0, 
+          y: isVisible ? 0 : 10 
+        }}
+        transition={{ 
+          delay: 1, 
+          duration: 0.8,
+        }}
+      >
         <div className="flex flex-col items-center">
-          <p className="text-white/50 text-sm mb-2">Découvrez notre histoire</p>
-          <div className="w-0.5 h-12 bg-gradient-to-b from-[var(--accent)] to-transparent animate-pulse"></div>
+          <p className="text-white/60 text-sm mb-3 tracking-wide">Découvrez notre histoire</p>
+          
+          <motion.div 
+            className="h-16 w-8 border-2 border-white/20 rounded-full flex justify-center overflow-hidden"
+            initial={{ opacity: 0.5 }}
+            animate={{ opacity: 0.8 }}
+            transition={{ duration: 1.5, repeat: Infinity, repeatType: "reverse" }}
+          >
+            <motion.div 
+              className="w-2 h-2 bg-[var(--accent)] rounded-full mt-2"
+              animate={{ 
+                y: [0, 20, 0],
+              }}
+              transition={{ 
+                duration: 1.5, 
+                repeat: Infinity, 
+                ease: "easeInOut" 
+              }}
+            />
+          </motion.div>
         </div>
-      </div>
+      </motion.div>
       
       {/* Decorative elements */}
       <div className="absolute top-1/2 left-8 transform -translate-y-1/2 z-1 opacity-20">
