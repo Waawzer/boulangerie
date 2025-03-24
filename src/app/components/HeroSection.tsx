@@ -21,7 +21,7 @@ export default function HeroSection() {
       
       <div className="container mx-auto px-6 relative z-10">
         <div 
-          className={`max-w-4xl mx-auto text-center mt-[-20vh] transition-all duration-1000 ${
+          className={`max-w-4xl mx-auto text-center mt-[-30vh] transition-all duration-1000 ${
             isVisible 
               ? 'opacity-100 transform translate-y-0' 
               : 'opacity-0 transform translate-y-10'
@@ -34,14 +34,14 @@ export default function HeroSection() {
           </h1>
           
           <p className="text-white/70 max-w-2xl mx-auto text-lg">
-            Découvrez notre vision futuriste de la boulangerie artisanale, où tradition séculaire 
+            Découvrez notre vision haut de gamme de la boulangerie artisanale, où tradition séculaire 
             et innovation avant-gardiste se rencontrent pour créer une expérience gustative unique.
           </p>
         </div>
       </div>
       
       <motion.div 
-        className="absolute bottom-12 left-1/2 transform -translate-x-1/2 z-10"
+        className="absolute bottom-[30%] left-1/2 transform -translate-x-1/2 z-10"
         initial={{ opacity: 0, y: 10 }}
         animate={{ 
           opacity: isVisible ? 0.7 : 0, 
