@@ -1,11 +1,38 @@
 'use client';
 
-import { useRef } from 'react';
+import { useRef, Suspense } from 'react';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
 import Image from 'next/image';
 import Link from 'next/link';
 import { motion, useScroll, useTransform, useSpring, useInView } from 'framer-motion';
+import { Canvas, useFrame } from '@react-three/fiber';
+import { useGLTF, Environment } from '@react-three/drei';
+import * as THREE from 'three';
+
+// Model component for the 3D bread
+function BreadModel({ scrollYProgress }: { scrollYProgress: { get: () => number } }) {
+  const { scene } = useGLTF("/bread.glb");
+  const meshRef = useRef<THREE.Group>(null);
+  
+  useFrame(() => {
+    if (!meshRef.current) return;
+    
+    // Rotate based on scroll position
+    const rotationValue = scrollYProgress.get();
+    meshRef.current.rotation.y = rotationValue * Math.PI * 2;
+    meshRef.current.rotation.x = rotationValue * Math.PI * 0.5;
+  });
+  
+  return (
+    <primitive 
+      ref={meshRef} 
+      object={scene} 
+      scale={2.5} 
+      position={[0, 0, 0]} 
+    />
+  );
+}
 
 // Animation variants
 const fadeInUp = {
@@ -121,35 +148,24 @@ export default function NosCreationsPage() {
   const titleOpacity = useTransform(smoothProgress, [0, 0.1], [1, 0]);
   const titleY = useTransform(smoothProgress, [0, 0.1], [0, -50]);
   
-  const parallaxY = useTransform(smoothProgress, [0, 1], ['0%', '40%']);
-  const imageScale = useTransform(smoothProgress, [0, 0.4], [1, 1.2]);
-  
   return (
     <main className="relative bg-black text-white overflow-hidden">
       <Header />
       
-      {/* Hero Section */}
+      {/* Hero Section with 3D Model */}
       <section className="relative h-screen flex items-center justify-center overflow-hidden">
-        <motion.div 
-          className="absolute inset-0 z-0"
-          style={{ 
-            y: parallaxY,
-            scale: imageScale
-          }}
-        >
-          <Image
-            src="/images/baguette.jpg"
-            alt="Artisanal bread"
-            fill
-            className="object-cover"
-            style={{
-              objectPosition: 'center',
-              filter: 'brightness(0.5) contrast(1.2)',
-            }}
-            priority
-          />
-          <div className="absolute inset-0 bg-black/40 backdrop-blur-[2px]"></div>
-        </motion.div>
+        {/* 3D Model Canvas */}
+        <div className="absolute inset-0 z-0">
+          <Canvas shadows camera={{ position: [0, 0, 10], fov: 45 }}>
+            <Suspense fallback={null}>
+              <ambientLight intensity={0.5} />
+              <spotLight position={[10, 10, 10]} angle={0.15} penumbra={1} intensity={1} castShadow />
+              <BreadModel scrollYProgress={smoothProgress} />
+              <Environment preset="city" />
+            </Suspense>
+          </Canvas>
+          <div className="absolute inset-0 bg-black/70 backdrop-blur-[2px] z-[1]"></div>
+        </div>
         
         <div className="container max-w-6xl mx-auto px-6 relative z-10">
           <motion.div 
