@@ -8,13 +8,14 @@ import * as THREE from 'three';
 
 // Préchargement du modèle 3D - fonction exportée
 export function preloadBreadModel() {
-  useGLTF.preload("/images/bread.glb");
-  console.log("Modèle 3D préchargé par la fonction Scene3D.preloadBreadModel()");
+  // Utiliser un chemin absolu
+  useGLTF.preload("/bread.glb", true);
+  console.log("Modèle 3D préchargé depuis /bread.glb");
   return true;
 }
 
 // Préchargement implicite lors de l'import du module
-useGLTF.preload("/images/bread.glb");
+useGLTF.preload("/bread.glb", true);
 
 // Composant de chargement
 function Loader() {
@@ -31,7 +32,8 @@ function Loader() {
 
 // Model component for the 3D bread
 function BreadModel({ scrollYProgress, isReady }: { scrollYProgress: { get: () => number }, isReady: boolean }) {
-  const { scene } = useGLTF("/images/bread.glb");
+  // Utiliser le chemin absolu
+  const { scene } = useGLTF("/bread.glb", true);
   const meshRef = useRef<THREE.Group>(null);
   const [initialRotation] = useState(Math.random() * Math.PI * 2);
   

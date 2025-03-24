@@ -109,23 +109,33 @@ export default function NosCreationsPage() {
       } else {
         // Préchargement des ressources
         const preloadTimer = setTimeout(() => {
-          fetch('/images/bread.glb')
+          // Tenter de précharger le modèle
+          fetch('/bread.glb')
             .then(() => {
+              console.log('Préchargé depuis /bread.glb');
               setIsModelPreloaded(true);
-              // Marquer comme préchargé pour les futures navigations
               sessionStorage.setItem('modelPreloaded', 'true');
             })
-            .catch(() => setIsModelPreloaded(true)); // Préchargé même en cas d'erreur
+            .catch(() => {
+              console.error('Échec du préchargement du modèle');
+              setIsModelPreloaded(true); // Continuer quand même
+            });
         }, 10);
         
         return () => clearTimeout(preloadTimer);
       }
-    } catch (e) {
+    } catch {
       // Si sessionStorage n'est pas disponible, on précharge directement
       const preloadTimer = setTimeout(() => {
-        fetch('/images/bread.glb')
-          .then(() => setIsModelPreloaded(true))
-          .catch(() => setIsModelPreloaded(true));
+        fetch('/bread.glb')
+          .then(() => {
+            console.log('Préchargé depuis /bread.glb (fallback)');
+            setIsModelPreloaded(true);
+          })
+          .catch(() => {
+            console.error('Échec du préchargement du modèle (fallback)');
+            setIsModelPreloaded(true);
+          });
       }, 10);
       
       return () => clearTimeout(preloadTimer);

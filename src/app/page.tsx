@@ -12,15 +12,15 @@ export default function Home() {
     // Préchargement du modèle bread.glb pour la page Nos Créations via fetch
     const preloadModel = async () => {
       try {
-        // Faire un fetch pour mettre le modèle en cache
-        const modelCache = await fetch('/images/bread.glb');
-        console.log('Modèle 3D préchargé avec succès via fetch');
+        // Précharger le modèle via fetch
+        await fetch('/bread.glb');
+        console.log('Modèle 3D préchargé avec succès via fetch depuis /bread.glb');
         
         // Marquer comme préchargé pour les futures navigations
         try {
           sessionStorage.setItem('modelPreloaded', 'true');
-        } catch (e) {
-          console.log('Impossible d\'utiliser sessionStorage:', e);
+        } catch {
+          console.log('Impossible d\'utiliser sessionStorage');
         }
         
         // Précharger également le JavaScript nécessaire pour la page Nos Créations
