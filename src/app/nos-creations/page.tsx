@@ -9,7 +9,14 @@ import { motion, useScroll, useTransform, useSpring, useInView } from 'framer-mo
 import dynamic from 'next/dynamic';
 
 // Import dynamique des composants 3D pour éviter les erreurs d'hydratation
-const Scene3D = dynamic(() => import('./Scene3D'), { ssr: false });
+const Scene3D = dynamic(() => import('./Scene3D'), { 
+  ssr: false,
+  loading: () => (
+    <div className="absolute inset-0 z-0 flex items-center justify-center">
+      <div className="w-16 h-16 border-4 border-t-[var(--accent)] border-opacity-20 rounded-full animate-spin"></div>
+    </div>
+  )
+});
 
 // Animation variants
 const fadeInUp = {
@@ -85,10 +92,20 @@ export default function NosCreationsPage() {
   const quoteRef = useRef(null);
   const infoRef = useRef(null);
   const [isMounted, setIsMounted] = useState(false);
+  const [isModelPreloaded, setIsModelPreloaded] = useState(false);
   
   // Effet pour s'assurer que le rendu se fait uniquement côté client
   useEffect(() => {
     setIsMounted(true);
+    
+    // Préchargement des ressources
+    const preloadTimer = setTimeout(() => {
+      fetch('/images/bread.glb')
+        .then(() => setIsModelPreloaded(true))
+        .catch(() => setIsModelPreloaded(true)); // Préchargé même en cas d'erreur
+    }, 10);
+    
+    return () => clearTimeout(preloadTimer);
   }, []);
   
   // Products data
@@ -138,7 +155,17 @@ export default function NosCreationsPage() {
       {/* Hero Section with 3D Model */}
       <section className="relative h-screen flex items-center justify-center overflow-hidden">
         {/* Le modèle 3D est rendu uniquement côté client pour éviter les erreurs d'hydratation */}
-        {isMounted && <Scene3D scrollYProgress={smoothProgress} />}
+        {isMounted && isModelPreloaded && <Scene3D scrollYProgress={smoothProgress} />}
+        
+        {/* Indicateur de chargement pendant le préchargement */}
+        {isMounted && !isModelPreloaded && (
+          <div className="absolute inset-0 z-0 flex items-center justify-center">
+            <div className="text-center">
+              <div className="w-16 h-16 border-4 border-t-[var(--accent)] border-opacity-20 rounded-full animate-spin mx-auto mb-4"></div>
+              <p className="text-[var(--accent)] text-sm">Chargement du modèle...</p>
+            </div>
+          </div>
+        )}
         
         <div className="container max-w-6xl mx-auto px-6 relative z-10">
           <motion.div 
