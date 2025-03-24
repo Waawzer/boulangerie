@@ -21,7 +21,7 @@ export default function HeroSection() {
       
       <div className="container mx-auto px-6 relative z-10">
         <div 
-          className={`max-w-4xl mx-auto text-center mt-[-5vh] transition-all duration-1000 ${
+          className={`max-w-4xl mx-auto text-center mt-[-20vh] transition-all duration-1000 ${
             isVisible 
               ? 'opacity-100 transform translate-y-0' 
               : 'opacity-0 transform translate-y-10'
