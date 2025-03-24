@@ -12,7 +12,7 @@ import * as THREE from 'three';
 
 // Model component for the 3D bread
 function BreadModel({ scrollYProgress }: { scrollYProgress: { get: () => number } }) {
-  const { scene } = useGLTF("/bread.glb");
+  const { scene } = useGLTF("/images/bread.glb");
   const meshRef = useRef<THREE.Group>(null);
   
   useFrame(() => {
@@ -20,16 +20,17 @@ function BreadModel({ scrollYProgress }: { scrollYProgress: { get: () => number 
     
     // Rotate based on scroll position
     const rotationValue = scrollYProgress.get();
-    meshRef.current.rotation.y = rotationValue * Math.PI * 2;
-    meshRef.current.rotation.x = rotationValue * Math.PI * 0.5;
+    meshRef.current.rotation.y = rotationValue * Math.PI * 4;
+    meshRef.current.rotation.x = rotationValue * Math.PI * 0.75;
+    meshRef.current.rotation.z = Math.sin(rotationValue * Math.PI) * 0.2;
   });
   
   return (
     <primitive 
       ref={meshRef} 
       object={scene} 
-      scale={2.5} 
-      position={[0, 0, 0]} 
+      scale={7.5} 
+      position={[0, -1, 0]} 
     />
   );
 }
@@ -156,10 +157,10 @@ export default function NosCreationsPage() {
       <section className="relative h-screen flex items-center justify-center overflow-hidden">
         {/* 3D Model Canvas */}
         <div className="absolute inset-0 z-0">
-          <Canvas shadows camera={{ position: [0, 0, 10], fov: 45 }}>
+          <Canvas shadows camera={{ position: [0, 0, 15], fov: 40 }}>
             <Suspense fallback={null}>
-              <ambientLight intensity={0.5} />
-              <spotLight position={[10, 10, 10]} angle={0.15} penumbra={1} intensity={1} castShadow />
+              <ambientLight intensity={0.7} />
+              <spotLight position={[10, 10, 10]} angle={0.15} penumbra={1} intensity={1.5} castShadow />
               <BreadModel scrollYProgress={smoothProgress} />
               <Environment preset="city" />
             </Suspense>
