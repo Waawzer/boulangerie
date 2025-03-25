@@ -105,45 +105,7 @@ export default function ScrollingBaguette() {
             </div>
           </div>
           
-          {/* L'Artisan text - appears after initial scroll */}
-          <div 
-            className="absolute inset-0 flex items-center justify-center pointer-events-none"
-            style={{ 
-              opacity: lArtisanOpacity,
-              transition: 'opacity 0.7s ease, transform 0.7s ease',
-              zIndex: 10,
-            }}
-          >
-            <h2 
-              className="text-[var(--accent)] text-8xl font-light tracking-widest uppercase"
-              style={{
-                textShadow: '0 0 10px rgba(212, 175, 55, 0.5)',
-                transform: `translateY(-40px) scale(${1 + lArtisanOpacity * 0.1})`,
-              }}
-            >
-              L&apos;Artisan
-            </h2>
-          </div>
           
-          {/* Moderne text - appears later */}
-          <div 
-            className="absolute inset-0 flex items-center justify-center pointer-events-none"
-            style={{ 
-              opacity: moderneOpacity,
-              transition: 'opacity 0.7s ease, transform 0.7s ease',
-              zIndex: 10,
-            }}
-          >
-            <h2 
-              className="text-[var(--accent)] text-8xl font-light tracking-widest uppercase"
-              style={{
-                textShadow: '0 0 10px rgba(212, 175, 55, 0.5)',
-                transform: `translateY(40px) scale(${1 + moderneOpacity * 0.1})`,
-              }}
-            >
-              Moderne
-            </h2>
-          </div>
           
           {/* "Découvrir nos créations" CTA button - appears at the end */}
           <div 
