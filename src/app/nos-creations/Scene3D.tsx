@@ -57,7 +57,7 @@ function BreadModel({ scrollYProgress, isReady }: { scrollYProgress: { get: () =
       
       try {
         useGLTF.preload(alternativePath, true);
-      } catch (_) {
+      } catch {
         console.error("Impossible de charger le modèle même en alternative");
       }
     };
