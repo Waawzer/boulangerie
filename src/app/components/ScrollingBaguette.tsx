@@ -34,29 +34,12 @@ export default function ScrollingBaguette() {
   // Start at 0 and reach full opacity at 20% scroll
   const initialFadeOpacity = Math.min(scrollProgress * 5, 1);
   
-  // Increased spacing between animations
-  // First text appears at 15% and stays until 40%
-  const lArtisanOpacity = scrollProgress > 0.15 && scrollProgress < 0.4 
-    ? Math.min((scrollProgress - 0.15) * 4, 1) 
-    : (scrollProgress >= 0.4 && scrollProgress < 0.45 
-        ? 1 
-        : (scrollProgress >= 0.45 
-            ? Math.max(1 - (scrollProgress - 0.45) * 5, 0) 
-            : 0));
-  
   // First content section appears at 25% and fades out at 60%
   const firstSectionOpacity = scrollProgress > 0.25 
     ? (scrollProgress < 0.6 
         ? Math.min((scrollProgress - 0.25) * 2.5, 1) // Slower fade in
         : Math.max(1 - (scrollProgress - 0.6) * 10, 0)) // Fade out faster at 60%
     : 0;
-  
-  // Second text appears at 50% and stays until 75%
-  const moderneOpacity = scrollProgress > 0.5 && scrollProgress < 0.75 
-    ? Math.min((scrollProgress - 0.5) * 4, 1) 
-    : (scrollProgress >= 0.75 
-        ? Math.max(1 - (scrollProgress - 0.75) * 5, 0) 
-        : 0);
   
   // Second content section appears at 60% and fades out at 80%
   const secondSectionOpacity = scrollProgress > 0.6 
