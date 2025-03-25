@@ -92,8 +92,8 @@ function BreadModel({ scrollYProgress, isReady }: { scrollYProgress: { get: () =
 
           // Si c'est un MeshStandardMaterial
           if (child.material instanceof THREE.MeshStandardMaterial) {
-            child.material.roughness = 0.4; // Réduire la rugosité pour plus de netteté
-            child.material.metalness = 0.1; // Légère apparence métallique pour refléter la lumière
+            child.material.roughness = 1; // Réduire la rugosité pour plus de netteté
+            child.material.metalness = 0.4; // Légère apparence métallique pour refléter la lumière
           }
         }
         
